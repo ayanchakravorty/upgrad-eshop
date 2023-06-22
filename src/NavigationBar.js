@@ -6,16 +6,14 @@ import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button, Grid } from "@mui/material";
 import SearchInput from "./components/search/SearchInput";
+import { useNavigate } from "react-router-dom";
 
 function NavigationBar(props) {
   const { isLogged, isAdmin } = props;
+  const navigate = useNavigate();
+
   return (
-    <AppBar
-      position="static"
-      style={{
-        backgroundColor: "#3f51b5",
-      }}
-    >
+    <AppBar position="static" className="app-primary-color">
       <Toolbar>
         <Grid container spacing={2}>
           <Grid item xs={5}>
@@ -60,10 +58,18 @@ function NavigationBar(props) {
               )
             ) : (
               <div>
-                <Button color="inherit" variant="text">
+                <Button
+                  color="inherit"
+                  variant="text"
+                  onClick={() => navigate("/login")}
+                >
                   Login
                 </Button>
-                <Button color="inherit" variant="text">
+                <Button
+                  color="inherit"
+                  variant="text"
+                  onClick={() => navigate("/signup")}
+                >
                   Sign Up
                 </Button>
               </div>

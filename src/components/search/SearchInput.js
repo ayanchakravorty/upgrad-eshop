@@ -40,7 +40,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function SearchInput() {
+function SearchInput(props) {
+  const { searchText, onSearchChange } = props;
+
   return (
     <Search>
       <SearchIconWrapper>
@@ -48,7 +50,9 @@ function SearchInput() {
       </SearchIconWrapper>
       <StyledInputBase
         placeholder="Search…"
+        defaultValue={searchText}
         inputProps={{ "aria-label": "search" }}
+        onChange={onSearchChange}
       />
     </Search>
   );

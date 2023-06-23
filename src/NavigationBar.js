@@ -9,7 +9,7 @@ import SearchInput from "./components/search/SearchInput";
 import { useNavigate } from "react-router-dom";
 
 function NavigationBar(props) {
-  const { isLogged, isAdmin } = props;
+  const { isLogged, isAdmin, searchTerm, onSearchChange } = props;
   const navigate = useNavigate();
 
   return (
@@ -30,7 +30,10 @@ function NavigationBar(props) {
             </IconButton>
           </Grid>
           <Grid item xs={3}>
-            <SearchInput />
+            <SearchInput
+              searchText={searchTerm}
+              onSearchChange={onSearchChange}
+            />
           </Grid>
           <Grid item xs={4} textAlign={"right"}>
             {isLogged ? (

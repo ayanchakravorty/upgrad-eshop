@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard(props) {
+  const navigate = useNavigate();
   const { productData } = props;
   return (
     <Grid item xs={4}>
@@ -48,7 +50,11 @@ function ProductCard(props) {
           }}
         >
           <div>
-            <Button size="small" variant="contained">
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => navigate(`/products/${productData.id}`)}
+            >
               Buy
             </Button>
           </div>

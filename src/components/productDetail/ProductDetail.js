@@ -11,6 +11,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
+// import axios from "axios";
 
 function ProductDetail() {
   const { authToken } = useContext(AuthContext);
@@ -20,12 +21,25 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    // if (authToken !== null) {
+    //   axios
+    //     .get(`http://localhost:8080/api/products/${id}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${authToken}`,
+    //       },
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data);
+    //     })
+    //     .catch((error) => console.error("Error fetching data:", error));
+    // }
     if (id) {
       const item = itemsList.find((item) => String(item.id) === id);
-      console.log("Entered", item);
       setProduct(item);
+    } else {
+      navigate("/login");
     }
-  }, [id]);
+  }, [id, authToken, navigate]);
 
   return authToken ? (
     <div>

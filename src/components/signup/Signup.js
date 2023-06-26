@@ -46,7 +46,6 @@ function Signup() {
     }
 
     if (firstName && lastName && email && password && contactNumber) {
-      console.log(firstName, lastName, email, password);
       axios
         .post("http://localhost:8080/api/auth/signup", {
           firstName: firstName,

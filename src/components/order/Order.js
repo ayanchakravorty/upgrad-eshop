@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import NavigationBar from "../../NavigationBar";
 import Select from "react-select";
 import { AuthContext } from "../../common/AuthContext";
@@ -12,11 +12,12 @@ import {
   TextField,
 } from "@mui/material";
 import { Navigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const steps = ["Items", "Select Address", "Confirm Order"];
 
 function Order() {
-  const { authToken } = useContext(AuthContext);
+  const { authToken, userId } = useContext(AuthContext);
   const { state } = useLocation();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -35,15 +36,41 @@ function Order() {
   const [stateNameError, setStateNameError] = useState(false);
   const [zipCodeError, setZipCodeError] = useState(false);
 
+  const [addressList, setAddressList] = useState([]);
+  const [currentAddress, setCurrentAddress] = useState();
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === steps.length - 1) {
+      axios
+        .post(
+          `http://localhost:8080/api/orders`,
+          {
+            quantity: state.quantity,
+            user: userId ?? "64982c40668e1d1dc3ed0ace",
+            product: state.name,
+            address: currentAddress.name,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleAddressSubmit = () => {
+  const handleAddressSubmit = (event) => {
+    event.preventDefault();
+
     setNameError(false);
     setContactNumberError(false);
     setStreetError(false);
@@ -78,11 +105,72 @@ function Order() {
         city: city,
         state: stateName,
         landmark: landmark,
-        zipCode: zipCode,
+        zipcode: zipCode,
+        user: userId ?? "64982c40668e1d1dc3ed0ace",
       };
-      console.log(addressObj);
+      axios
+        .post(`http://localhost:8080/api/addresses`, addressObj, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
     }
   };
+
+  const handleCurrentAddress = (add) => setCurrentAddress(add);
+
+  useEffect(() => {
+    if (authToken !== null) {
+      axios
+        .get(`http://localhost:8080/api/addresses`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then((response) => {
+          setAddressList(response.data);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    }
+  }, [authToken]);
+
+  const renderProductDetails = () => (
+    <div
+      style={{
+        padding: "10px 20px",
+      }}
+    >
+      <Typography gutterBottom variant="h5" component="p">
+        {state.name}
+      </Typography>
+      <Typography gutterBottom variant="body1" component="p">
+        Quantity: {state.quantity}
+      </Typography>
+      <Typography gutterBottom variant="body1" component="div" sx={{ mb: 2 }}>
+        Category: {state.category}
+      </Typography>
+      <Typography
+        gutterBottom
+        variant="body2"
+        component="p"
+        sx={{ fontStyle: "italic" }}
+      >
+        {state.description}
+      </Typography>
+      <Typography
+        gutterBottom
+        variant="h5"
+        component="div"
+        sx={{ color: "red", my: 2 }}
+      >
+        Total Price: ₹{state.price * state.quantity}
+      </Typography>
+    </div>
+  );
 
   return authToken !== null ? (
     <div>
@@ -123,42 +211,7 @@ function Order() {
                   height={250}
                 />
               </div>
-              <div
-                style={{
-                  padding: "10px 20px",
-                }}
-              >
-                <Typography gutterBottom variant="h5" component="p">
-                  {state.name}
-                </Typography>
-                <Typography gutterBottom variant="body1" component="p">
-                  Quantity: {state.quantity}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="body1"
-                  component="div"
-                  sx={{ mb: 2 }}
-                >
-                  Category: {state.category}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="body2"
-                  component="p"
-                  sx={{ fontStyle: "italic" }}
-                >
-                  {state.description}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{ color: "red", my: 2 }}
-                >
-                  Total Price: ₹{state.price * state.quantity}
-                </Typography>
-              </div>
+              {renderProductDetails()}
             </div>
           ) : activeStep === 1 ? (
             <div
@@ -181,8 +234,10 @@ function Order() {
                   className="basic-single"
                   classNamePrefix="select"
                   name="address"
-                  options={[]}
-                  onChange={handleAddressSubmit}
+                  getOptionLabel={(item) => item.name}
+                  getOptionValue={(item) => item.id}
+                  options={addressList}
+                  onChange={(data) => handleCurrentAddress(data)}
                 />
                 <p
                   style={{
@@ -288,7 +343,38 @@ function Order() {
               </form>
             </div>
           ) : (
-            <p>Step 3</p>
+            <div
+              style={{
+                width: "768px",
+                padding: "10px 20px",
+                margin: "50px auto",
+                height: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              {renderProductDetails()}
+              <div>
+                <Typography gutterBottom variant="h5" component="p">
+                  Address Details:
+                </Typography>
+                <Typography gutterBottom variant="body2" component="p">
+                  {currentAddress.name}
+                </Typography>
+                <Typography gutterBottom variant="body2" component="p">
+                  Contact Number: {currentAddress.contactNumber}
+                </Typography>
+                <Typography gutterBottom variant="body2" component="p">
+                  {`${currentAddress.street}, ${currentAddress.city}`}
+                </Typography>
+                <Typography gutterBottom variant="body2" component="p">
+                  {currentAddress.state}
+                </Typography>
+                <Typography gutterBottom variant="body2" component="p">
+                  {currentAddress.zipcode}
+                </Typography>
+              </div>
+            </div>
           )}
           <Box
             sx={{

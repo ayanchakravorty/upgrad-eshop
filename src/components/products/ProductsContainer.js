@@ -32,7 +32,9 @@ function ProductsContainer() {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          if (response.data.length > 0) {
+            setData(response.data.length);
+          }
         })
         .catch((error) => console.error("Error fetching data:", error));
     } else {

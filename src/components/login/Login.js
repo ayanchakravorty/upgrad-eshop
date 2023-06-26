@@ -8,7 +8,7 @@ import { AuthContext } from "../../common/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { authToken, setToken } = useContext(AuthContext);
+  const { authToken, setToken, setUserId } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -28,15 +28,14 @@ function Login() {
     }
 
     if (email && password) {
-      console.log(email, password);
       axios
         .post("http://localhost:8080/api/auth/signin", {
           username: email,
           password: password,
         })
         .then(function (response) {
-          console.log(response.data.token);
           setToken(response.data.token);
+          setUserId(response.data.id);
           navigate("/products");
         })
         .catch(function (error) {

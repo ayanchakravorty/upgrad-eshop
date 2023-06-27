@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import NavigationBar from "../../NavigationBar";
 import { AuthContext } from "../../common/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { itemsList } from "../../common/mock";
 import {
   Button,
   Chip,
@@ -11,39 +10,48 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-// import axios from "axios";
+import axios from "axios";
 
 function ProductDetail() {
-  const { authToken } = useContext(AuthContext);
+  const { authToken, isAdmin } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState();
   const [quantity, setQuantity] = useState(1);
+  const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
-    // if (authToken !== null) {
-    //   axios
-    //     .get(`http://localhost:8080/api/products/${id}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${authToken}`,
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data);
-    //     })
-    //     .catch((error) => console.error("Error fetching data:", error));
-    // }
-    if (id) {
-      const item = itemsList.find((item) => String(item.id) === id);
-      setProduct(item);
+    if (authToken !== null) {
+      axios
+        .get("http://localhost:8080/api/products/categories", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then(function (response) {
+          setCategoryList(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      axios
+        .get(`http://localhost:8080/api/products/${id}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then((response) => {
+          setProduct(response.data);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
     } else {
       navigate("/login");
     }
-  }, [id, authToken, navigate]);
+  }, [authToken, id, navigate]);
 
   return authToken ? (
     <div>
-      <NavigationBar isLogged={authToken !== null} />
+      <NavigationBar isLogged={authToken !== null} isAdmin={isAdmin} />
       {product ? (
         <>
           <div style={{ marginBottom: 30, marginTop: 30, textAlign: "center" }}>
@@ -54,10 +62,14 @@ function ProductDetail() {
               disabled
               aria-label="Category"
             >
-              <ToggleButton value="all">ALL</ToggleButton>
-              <ToggleButton value="apparel">APPAREL</ToggleButton>
-              <ToggleButton value="electronics">ELECTRONICS</ToggleButton>
-              <ToggleButton value="personal-care">PERSONAL CARE</ToggleButton>
+              <ToggleButton key="all" value="all">
+                ALL
+              </ToggleButton>
+              {categoryList.map((category) => (
+                <ToggleButton key={category} value={category}>
+                  {category.toUpperCase()}
+                </ToggleButton>
+              ))}
             </ToggleButtonGroup>
           </div>
           <div

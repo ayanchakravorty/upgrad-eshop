@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -7,10 +7,19 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button, Grid } from "@mui/material";
 import SearchInput from "./components/search/SearchInput";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./common/AuthContext";
 
 function NavigationBar(props) {
   const { isLogged, isAdmin, searchTerm, onSearchChange } = props;
+  const { setToken, setUserId, setIsAdmin } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setToken(null);
+    setUserId(null);
+    setIsAdmin(false);
+    navigate("/login");
+  };
 
   return (
     <AppBar position="static" className="app-primary-color">
@@ -39,22 +48,42 @@ function NavigationBar(props) {
             {isLogged ? (
               isAdmin ? (
                 <div>
-                  <Button color="inherit" variant="text">
+                  <Button
+                    color="inherit"
+                    variant="text"
+                    onClick={() => navigate(isLogged ? "/products" : "/login")}
+                  >
                     Home
                   </Button>
-                  <Button color="inherit" variant="text">
+                  <Button
+                    color="inherit"
+                    variant="text"
+                    onClick={() => navigate("/add-product")}
+                  >
                     Add Product
                   </Button>
-                  <Button variant="contained" color="error">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleLogout}
+                  >
                     Logout
                   </Button>
                 </div>
               ) : (
                 <div>
-                  <Button color="inherit" variant="text">
+                  <Button
+                    color="inherit"
+                    variant="text"
+                    onClick={() => navigate(isLogged ? "/products" : "/login")}
+                  >
                     Home
                   </Button>
-                  <Button variant="contained" color="error">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleLogout}
+                  >
                     Logout
                   </Button>
                 </div>

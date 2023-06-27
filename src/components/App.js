@@ -6,6 +6,7 @@ import ProductsContainer from "./products/ProductsContainer";
 import { AuthContextProvider } from "../common/AuthContext";
 import ProductDetail from "./productDetail/ProductDetail";
 import Order from "./order/Order";
+import AddEditProduct from "./addProduct/AddEditProduct";
 
 const appTheme = createTheme({
   palette: {
@@ -24,6 +25,8 @@ function App() {
       <ThemeProvider theme={appTheme}>
         <BrowserRouter>
           <Routes>
+            <Route path="/edit-product/:id" element={<AddEditProduct />} />
+            <Route path="/add-product" element={<AddEditProduct />} />
             <Route path="/order" element={<Order />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route exact path="/products" element={<ProductsContainer />} />

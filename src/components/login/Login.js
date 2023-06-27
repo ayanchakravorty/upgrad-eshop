@@ -8,7 +8,8 @@ import { AuthContext } from "../../common/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { authToken, setToken, setUserId } = useContext(AuthContext);
+  const { authToken, setToken, setUserId, setIsAdmin } =
+    useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -34,8 +35,15 @@ function Login() {
           password: password,
         })
         .then(function (response) {
-          setToken(response.data.token);
-          setUserId(response.data.id);
+          if (response.data.token) {
+            setToken(response.data.token);
+          }
+          if (response.data.id) {
+            setUserId(response.data.id);
+          }
+          if (response.data.roles && response.data.roles.includes("ADMIN")) {
+            setIsAdmin(true);
+          }
           navigate("/products");
         })
         .catch(function (error) {

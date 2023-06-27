@@ -11,13 +11,14 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const steps = ["Items", "Select Address", "Confirm Order"];
 
 function Order() {
-  const { authToken, userId } = useContext(AuthContext);
+  const { authToken, userId, isAdmin } = useContext(AuthContext);
+  const navigate = useNavigate();
   const { state } = useLocation();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -46,8 +47,8 @@ function Order() {
           {
             quantity: state.quantity,
             user: userId ?? "64982c40668e1d1dc3ed0ace",
-            product: state.name,
-            address: currentAddress.name,
+            product: state.id,
+            address: currentAddress.id,
           },
           {
             headers: {
@@ -56,9 +57,10 @@ function Order() {
           }
         )
         .then((response) => {
-          console.log(response.data);
+          alert("Order placed successfully");
+          navigate("/products");
         })
-        .catch((error) => console.error("Error fetching data:", error));
+        .catch((error) => console.error("Error placing order:", error));
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -174,7 +176,7 @@ function Order() {
 
   return authToken !== null ? (
     <div>
-      <NavigationBar isLogged={authToken !== null} />
+      <NavigationBar isLogged={authToken !== null} isAdmin={isAdmin} />
       <Box sx={{ width: "1200px", margin: "50px auto" }}>
         <Stepper activeStep={activeStep}>
           {steps.map((label) => {

@@ -1,0 +1,44 @@
+.orderContainer {
+  width: 1200px;
+  margin: 50px auto;
+}
+.productDetails,
+.stepContainer1 > div {
+  padding: 10px 20px;
+}
+.stepContainer1 {
+  width: 768px;
+  padding: 10px 20px;
+  margin: 50px auto;
+  height: 100%;
+  display: flex;
+  gap: 2;
+}
+
+.stepContainer2 {
+  width: 500px;
+  padding: 10px 20px;
+  margin: 50px auto;
+  height: 100%;
+  display: flex;
+  gap: 2;
+}
+.stepContainer2 form {
+  width: 100%;
+}
+.stepContainer2 .orSeparator {
+  margin: 30px 0;
+  text-align: center;
+}
+.center {
+  text-align: center;
+}
+
+.stepContainer3 {
+  width: 768px;
+  padding: 10px 20px;
+  margin: 50px auto;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+}

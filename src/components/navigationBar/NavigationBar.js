@@ -5,9 +5,9 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button, Grid } from "@mui/material";
-import SearchInput from "./components/search/SearchInput";
+import SearchInput from "../search/SearchInput";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./common/AuthContext";
+import { AuthContext } from "../../common/AuthContext";
 
 function NavigationBar(props) {
   const { isLogged, isAdmin, searchTerm, onSearchChange } = props;

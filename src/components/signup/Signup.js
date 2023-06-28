@@ -1,9 +1,11 @@
 import { Avatar, Button, TextField } from "@mui/material";
-import NavigationBar from "../../NavigationBar";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import axios from "axios";
+import NavigationBar from "../navigationBar/NavigationBar";
+
+import "./Signup.css";
 
 function Signup() {
   const navigate = useNavigate();
@@ -55,11 +57,13 @@ function Signup() {
           contactNumber: contactNumber,
         })
         .then(function (response) {
-          console.log(response.data);
+          alert(response.data.message);
           navigate("/login");
         })
         .catch(function (error) {
-          console.log(error);
+          alert(
+            "Error: There was an issue in registering the user, please try again later."
+          );
         });
     }
   };
@@ -67,22 +71,9 @@ function Signup() {
   return (
     <>
       <NavigationBar />
-      <div
-        style={{
-          width: "350px",
-          padding: "10px 20px",
-          margin: "75px auto",
-          height: "100%",
-          textAlign: "center",
-        }}
-      >
+      <div className="signupContainer">
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <Avatar
-            style={{
-              backgroundColor: "deeppink",
-              margin: "10px auto",
-            }}
-          >
+          <Avatar className="avatarStyle">
             <LockIcon />
           </Avatar>
           <TextField
@@ -160,12 +151,12 @@ function Signup() {
           >
             Sign Up
           </Button>
-          <div style={{ textAlign: "right", margin: "10px 0" }}>
+          <div className="loginLink">
             <Link to="/login">Already have an account? Sign in</Link>
           </div>
         </form>
       </div>
-      <div style={{ textAlign: "center" }}>
+      <div className="signupFooter">
         Copyright &copy; <Link href="https://www.upgrad.com/">upGrad</Link> 2023
       </div>
     </>

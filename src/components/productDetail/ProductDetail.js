@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import NavigationBar from "../../NavigationBar";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../common/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
@@ -11,6 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import NavigationBar from "../navigationBar/NavigationBar";
+
+import "./ProductDetail.css";
 
 function ProductDetail() {
   const { authToken, isAdmin } = useContext(AuthContext);
@@ -31,8 +33,8 @@ function ProductDetail() {
         .then(function (response) {
           setCategoryList(response.data);
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch(function () {
+          alert("Error: There was an issue in retrieving categories list.");
         });
       axios
         .get(`http://localhost:8080/api/products/${id}`, {
@@ -43,7 +45,9 @@ function ProductDetail() {
         .then((response) => {
           setProduct(response.data);
         })
-        .catch((error) => console.error("Error fetching data:", error));
+        .catch(() =>
+          alert("Error: There was an issue in fetching the product details.")
+        );
     } else {
       navigate("/login");
     }
@@ -53,8 +57,8 @@ function ProductDetail() {
     <div>
       <NavigationBar isLogged={authToken !== null} isAdmin={isAdmin} />
       {product ? (
-        <>
-          <div style={{ marginBottom: 30, marginTop: 30, textAlign: "center" }}>
+        <Fragment>
+          <div className="categorySection">
             <ToggleButtonGroup
               color="primary"
               value={product.category}
@@ -72,21 +76,8 @@ function ProductDetail() {
               ))}
             </ToggleButtonGroup>
           </div>
-          <div
-            style={{
-              width: "768px",
-              padding: "10px 20px",
-              margin: "50px auto",
-              height: "100%",
-              display: "flex",
-              gap: 2,
-            }}
-          >
-            <div
-              style={{
-                padding: "10px 20px",
-              }}
-            >
+          <div className="detailContainer">
+            <div className="child-divs">
               <img
                 src={product.imageUrl}
                 alt={`${product.name}`}
@@ -94,12 +85,8 @@ function ProductDetail() {
                 height={250}
               />
             </div>
-            <div
-              style={{
-                padding: "10px 20px",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className="child-divs">
+              <div className="nameContainer">
                 <Typography gutterBottom variant="h5" component="p">
                   {product.name}
                 </Typography>
@@ -145,6 +132,7 @@ function ProductDetail() {
                 variant="contained"
                 color="primary"
                 type="button"
+                disabled={!(quantity >= 1)}
                 sx={{ mt: 2 }}
                 onClick={() =>
                   navigate("/order", {
@@ -156,7 +144,7 @@ function ProductDetail() {
               </Button>
             </div>
           </div>
-        </>
+        </Fragment>
       ) : null}
     </div>
   ) : (

@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
-import NavigationBar from "../../NavigationBar";
 import { Avatar, Button, TextField } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../common/AuthContext";
+import NavigationBar from "../navigationBar/NavigationBar";
+
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -46,8 +48,8 @@ function Login() {
           }
           navigate("/products");
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch(function () {
+          alert("Error: Invalid credentials.");
         });
     }
   };
@@ -59,22 +61,9 @@ function Login() {
   return (
     <>
       <NavigationBar />
-      <div
-        style={{
-          width: "500px",
-          padding: "10px 20px",
-          margin: "100px auto",
-          height: "100%",
-          textAlign: "center",
-        }}
-      >
+      <div className="loginContainer">
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <Avatar
-            style={{
-              backgroundColor: "deeppink",
-              margin: "10px auto",
-            }}
-          >
+          <Avatar className="avatarStyle">
             <LockIcon />
           </Avatar>
           <TextField
@@ -109,7 +98,7 @@ function Login() {
           </Button>
         </form>
       </div>
-      <div style={{ textAlign: "center" }}>
+      <div className="loginFooter">
         Copyright &copy; <Link href="https://www.upgrad.com/">upGrad</Link> 2023
       </div>
     </>

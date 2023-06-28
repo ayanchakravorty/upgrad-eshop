@@ -1,0 +1,18 @@
+.signupContainer {
+  width: 350px;
+  padding: 10px 20px;
+  margin: 75px auto;
+  height: 100%;
+  text-align: center;
+}
+.avatarStyle {
+  background-color: deeppink !important;
+  margin: 10px auto;
+}
+.loginLink {
+  text-align: right;
+  margin: 10px 0;
+}
+.signupFooter {
+  text-align: center;
+}

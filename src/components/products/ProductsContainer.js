@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect, useState } from "react";
-import NavigationBar from "../../NavigationBar";
+import NavigationBar from "../navigationBar/NavigationBar";
 import {
   FormControl,
   Grid,
@@ -14,6 +14,8 @@ import ProductCard from "../productCard/ProductCard";
 import axios from "axios";
 import { AuthContext } from "../../common/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+import "./ProductsContainer.css";
 
 function ProductsContainer() {
   const { authToken, isAdmin } = useContext(AuthContext);
@@ -36,8 +38,8 @@ function ProductsContainer() {
         .then(function (response) {
           setCategoryList(response.data);
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch(function () {
+          alert("Error: There was an issue in retrieving categories list.");
         });
       axios
         .get("http://localhost:8080/api/products", {
@@ -81,7 +83,6 @@ function ProductsContainer() {
         )
       );
     } else {
-      console.log("entered");
       setData(temp);
     }
     setSortBy(keyString);
@@ -107,7 +108,9 @@ function ProductsContainer() {
           triggerDataFetch();
         })
         .catch(function (error) {
-          console.log(error);
+          alert(
+            `Error: There was an issue in deleting product, please try again later.`
+          );
         });
     }
   };
@@ -121,15 +124,8 @@ function ProductsContainer() {
         onSearchChange={handleSearchChange}
       />
       {originalData.length > 0 ? (
-        <div
-          style={{
-            width: "1200px",
-            padding: "10px 20px",
-            margin: "20px auto",
-            height: "100%",
-          }}
-        >
-          <div style={{ marginBottom: 30, textAlign: "center" }}>
+        <div className="productsContainer">
+          <div className="categorySectionStyle">
             <ToggleButtonGroup
               color="primary"
               value={category}
@@ -149,7 +145,7 @@ function ProductsContainer() {
           </div>
 
           <div>
-            <FormControl style={{ minWidth: 150, maxWidth: 250 }}>
+            <FormControl className="sortByDropdown">
               <InputLabel id="sort-select-label">Sort By</InputLabel>
               <Select
                 labelId="demo-simple-select-label"

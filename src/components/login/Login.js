@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Avatar, Button, TextField } from "@mui/material";
+import { Avatar, Button, TextField, Typography } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -66,6 +66,9 @@ function Login() {
           <Avatar className="avatarStyle">
             <LockIcon />
           </Avatar>
+          <Typography gutterBottom variant="h5" component="p">
+            Sign in
+          </Typography>
           <TextField
             label="Email Address"
             onChange={(e) => setEmail(e.target.value)}

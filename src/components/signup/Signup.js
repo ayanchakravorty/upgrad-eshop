@@ -1,4 +1,4 @@
-import { Avatar, Button, TextField } from "@mui/material";
+import { Avatar, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
@@ -76,6 +76,9 @@ function Signup() {
           <Avatar className="avatarStyle">
             <LockIcon />
           </Avatar>
+          <Typography gutterBottom variant="h5" component="p">
+            Sign up
+          </Typography>
           <TextField
             label="First Name"
             onChange={(e) => setFirstName(e.target.value)}

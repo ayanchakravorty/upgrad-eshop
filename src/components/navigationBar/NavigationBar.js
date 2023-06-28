@@ -31,6 +31,8 @@ function NavigationBar(props) {
               edge="start"
               color="inherit"
               aria-label="menu"
+              disableRipple
+              onClick={() => navigate(isLogged ? "/products" : "/login")}
             >
               <ShoppingCartIcon />
               <Typography variant="body1" component="span">
